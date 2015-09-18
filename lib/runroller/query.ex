@@ -53,6 +53,8 @@ defmodule Runroller.Query do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Runroller.Cache.store(uri, uri)
         {:ok, uri}
+      {:ok, %HTTPoison.Response{status_code: code}} when code >= 400 and code <= 599 ->
+        {:error, "http_#{code}"}
       {:error, error} ->
         {:error, error.reason}
     end
