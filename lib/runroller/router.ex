@@ -14,7 +14,7 @@ defmodule Runroller.Router do
 
   get "/unroll" do
     query = URI.decode_query(conn.query_string)
-    uri = query["uri"]
+    uri = String.strip(query["uri"])
 
     case Runroller.Query.lookup(uri) do
       {:ok, unrolled_uri} ->
