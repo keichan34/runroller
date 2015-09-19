@@ -2,6 +2,7 @@ defmodule Runroller.Router do
   use Plug.Router
 
   plug Plug.Logger
+  plug Runroller.Plug.AccessControl
   plug :match
   plug :dispatch
 
