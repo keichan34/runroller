@@ -1,0 +1,50 @@
+<html>
+<head>
+<script>
+(function() {
+  function unroll(link) {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'https://unroll.kbys.me/unroll?uri=' + encodeURIComponent(link), true);
+
+    request.onload = function() {
+      var data = JSON.parse(this.response);
+      if (data.error === false) {
+        // Success!
+        alert(data.unrolled_uri);
+      } else {
+        // We reached our target server, but it returned an error
+        alert("" + data.uri + " could not be reached. " + data.error_description + " (code: " + error.error_code + ")");
+      }
+    };
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+      alert("There was a problem contacting the unroll API. Please try again in a few moments.")
+    };
+
+    request.send();
+  }
+
+  function handleCommand(event) {
+    if (event.command === 'unroll_link') {
+      var link = event.userInfo;
+      if (link) {
+        unroll(link);
+      }
+    }
+  }
+
+  function handleValidate(event) {
+    if (event.command === 'unroll_link') {
+      var link = event.userInfo;
+      event.target.disabled = !link;
+    }
+  }
+
+  safari.application.addEventListener("command", handleCommand, false);
+  safari.application.addEventListener("validate", handleValidate, false);
+})();
+</script>
+</head>
+</html>
+
