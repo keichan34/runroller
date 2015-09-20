@@ -11,6 +11,7 @@ defmodule Runroller.Mixfile do
     [app: :runroller,
      version: "0.0.1-#{commit_count}-#{git_sha}",
      elixir: "~> 1.0",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -26,11 +27,19 @@ defmodule Runroller.Mixfile do
         :cowboy,
         :plug,
         :poison,
-        :httpoison
+        :httpoison,
+        :tzdata
+      ],
+      included_applications: [
+        :timex
       ],
       mod: {Runroller, []}
     ]
   end
+
+  # Specifies which paths to compile per environment
+  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
+  defp elixirc_paths(_),     do: ["lib", "web"]
 
   # Dependencies can be Hex packages:
   #
@@ -47,7 +56,8 @@ defmodule Runroller.Mixfile do
       {:plug, "~> 1.0"},
       {:poison, "~> 1.5"},
       {:httpoison, "~> 0.7.2"},
-      {:exrm, "~> 0.19.0"}
+      {:exrm, "~> 0.19.0"},
+      {:timex, "~> 0.19.4"}
     ]
   end
 end

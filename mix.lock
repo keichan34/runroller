@@ -1,4 +1,5 @@
 %{"bbmustache": {:hex, :bbmustache, "1.0.3"},
+  "combine": {:hex, :combine, "0.5.2"},
   "conform": {:hex, :conform, "0.16.0"},
   "cowboy": {:hex, :cowboy, "1.0.3"},
   "cowlib": {:hex, :cowlib, "1.0.1"},
@@ -14,4 +15,6 @@
   "providers": {:hex, :providers, "1.4.1"},
   "ranch": {:hex, :ranch, "1.1.0"},
   "relx": {:hex, :relx, "3.5.0"},
-  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"}}
+  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
+  "timex": {:hex, :timex, "0.19.4"},
+  "tzdata": {:hex, :tzdata, "0.5.2"}}

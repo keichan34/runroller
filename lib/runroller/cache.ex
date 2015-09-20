@@ -2,6 +2,9 @@ defmodule Runroller.Cache do
   # Keys will expire after 30 minutes.
   @default_expiry 1_800_000
 
+  # Minimum TTL
+  @minimum_expiry 60_000
+
   def start_link do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
@@ -10,13 +13,15 @@ defmodule Runroller.Cache do
     Agent.get_and_update(__MODULE__, fn(map) ->
       query_time = :erlang.system_time(:milli_seconds)
       case Map.get(map, key) do
+        {value, :infinity} ->
+          {{:hit, key, value, :infinity}, map}
         {value, expires_at} when expires_at > query_time ->
-          {value, map}
+          {{:hit, key, value, expires_at}, map}
         {_, _} ->
           # Expired; return nil and remove this from the map.
-          {nil, Map.delete(map, key)}
+          {{:miss, key}, Map.delete(map, key)}
         nil ->
-          {nil, map}
+          {{:miss, key}, map}
       end
     end)
   end
@@ -28,8 +33,16 @@ defmodule Runroller.Cache do
   def store(key, val, expiry \\ @default_expiry) do
     Agent.update(__MODULE__, fn(map) ->
       query_time = :erlang.system_time(:milli_seconds)
-      store_val = {val, query_time + expiry}
+
+      store_val = if expiry == :infinity do
+        {val, :infinity}
+      else
+        {val, query_time + max(@minimum_expiry, expiry)}
+      end
+
       Map.update(map, key, store_val, fn
+        ({_, :infinity}) ->
+          store_val
         ({our_val, expires_at}) when our_val == val and expires_at > query_time ->
           store_val
         (other) ->

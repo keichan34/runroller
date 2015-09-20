@@ -18,10 +18,16 @@ defmodule Runroller.Router do
     uri = String.strip(query["uri"])
 
     case Runroller.Query.lookup(uri) do
-      {:ok, unrolled_uri} ->
+      {:ok, hit_or_miss, unrolled_uri, redirect_path} ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(200, Poison.encode!(%{error: false, uri: uri, unrolled_uri: unrolled_uri}))
+        |> put_resp_header("x-cache", Atom.to_string(hit_or_miss))
+        |> send_resp(200, Poison.encode!(%{
+          error: false,
+          uri: uri,
+          unrolled_uri: unrolled_uri,
+          redirect_path: :lists.reverse(redirect_path)
+        }))
       {:error, reason} ->
         conn
         |> put_resp_content_type("application/json")
