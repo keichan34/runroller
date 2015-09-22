@@ -50,4 +50,11 @@ defmodule Runroller.Cache do
       end)
     end)
   end
+
+  @doc """
+  Wipes the entire cache out.
+  """
+  def purge do
+    Agent.update(__MODULE__, fn(_) -> %{} end)
+  end
 end
