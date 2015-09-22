@@ -57,4 +57,10 @@ defmodule RunrollerUnrollTest do
   test "a URI with a relative Location: header" do
     assert_unrolled unroll("http://www.example.com/302_to_relative")
   end
+
+  test "a URI that times out" do
+    {status, body} = unroll("http://www.example.com/timeout")
+    assert status == 504
+    assert body["error_code"] == "timeout"
+  end
 end

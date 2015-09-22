@@ -4,7 +4,7 @@ defmodule Runroller.Query do
   @doc "Performs a HEAD request and returns the status code and headers."
   defcallback head(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
 
-  @lookup_timeout 8000
+  @lookup_timeout 20000
 
   def lookup(uri) do
     flush
