@@ -31,7 +31,8 @@ defmodule Runroller.Mixfile do
         :tzdata
       ],
       included_applications: [
-        :timex
+        :timex,
+        :logger_file_backend
       ],
       mod: {Runroller, []}
     ]
@@ -57,7 +58,8 @@ defmodule Runroller.Mixfile do
       {:poison, "~> 1.5"},
       {:httpoison, "~> 0.7.2"},
       {:exrm, "~> 0.19.0"},
-      {:timex, "~> 0.19.4"}
+      {:timex, "~> 0.19.4"},
+      {:logger_file_backend, "~> 0.0.4"}
     ]
   end
 end

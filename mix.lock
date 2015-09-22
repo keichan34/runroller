@@ -9,6 +9,7 @@
   "hackney": {:hex, :hackney, "1.3.2"},
   "httpoison": {:hex, :httpoison, "0.7.3"},
   "idna": {:hex, :idna, "1.0.2"},
+  "logger_file_backend": {:hex, :logger_file_backend, "0.0.4"},
   "neotoma": {:hex, :neotoma, "1.7.3"},
   "plug": {:hex, :plug, "1.0.1"},
   "poison": {:hex, :poison, "1.5.0"},
