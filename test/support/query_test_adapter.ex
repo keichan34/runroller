@@ -12,4 +12,7 @@ defmodule Runroller.Query.TestAdapter do
 
   def head("http://www.example.com/one_301_to_200", _),
     do: {:ok, 301, %{"location" => "http://www.example.com/200"}}
+
+  def head("http://www.example.com/302_to_relative", _),
+    do: {:ok, 302, %{"location" => "/200"}}
 end

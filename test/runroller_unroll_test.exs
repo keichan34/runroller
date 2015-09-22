@@ -33,4 +33,8 @@ defmodule RunrollerUnrollTest do
   test "a URI with one 301 redirect" do
     assert_unrolled unroll("http://www.example.com/one_301_to_200")
   end
+
+  test "a URI with a relative Location: header" do
+    assert_unrolled unroll("http://www.example.com/302_to_relative")
+  end
 end

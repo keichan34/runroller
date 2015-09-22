@@ -68,6 +68,10 @@ defmodule Runroller.Query do
     {:error, :missing_location_header_from_response}
   end
   defp process_redirect(uri, code, %{"location" => location} = headers, redirect_path) do
+    location = Runroller.URI.Utils.merge(
+      URI.parse(uri),
+      URI.parse(location)
+    ) |> to_string
     Runroller.Cache.store(uri, location, ttl_for_code_and_headers(code, headers))
     perform_lookup(location, redirect_path)
   end
