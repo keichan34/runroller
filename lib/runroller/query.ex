@@ -60,8 +60,12 @@ defmodule Runroller.Query do
         {:error, reason}
     end
   end
+  # The last request of the chain should be exactly the same as the request URI.
+  defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path) when uri == cached_uri do
+    {:ok, :hit, cached_uri, redirect_path}
+  end
   defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path) do
-    {:ok, :hit, cached_uri, [uri | redirect_path]}
+    perform_lookup(cached_uri, [uri | redirect_path])
   end
 
   defp process_redirect(_uri, _code, %{"location" => nil}, _) do

@@ -1,8 +1,14 @@
 defmodule RunrollerUnrollTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Plug.Test
 
   @opts Runroller.Router.init([])
+
+  setup do
+    Runroller.Cache.purge
+
+    {:ok, []}
+  end
 
   def unroll(uri) do
     query = URI.encode_query(%{"uri" => uri})
@@ -28,6 +34,20 @@ defmodule RunrollerUnrollTest do
 
   test "a URI with two redirects" do
     assert_unrolled unroll("http://www.example.com/two_to_200")
+  end
+
+  test "a URI with two redirects (cached)" do
+    unroll("http://www.example.com/two_to_200")
+    assert_unrolled unroll("http://www.example.com/two_to_200")
+  end
+
+  test "a URI with three redirects" do
+    assert_unrolled unroll("http://www.example.com/three_to_200")
+  end
+
+  test "a URI with three redirects (cached)" do
+    unroll("http://www.example.com/three_to_200")
+    assert_unrolled unroll("http://www.example.com/three_to_200")
   end
 
   test "a URI with one 301 redirect" do

@@ -57,4 +57,11 @@ defmodule Runroller.Cache do
   def purge do
     Agent.update(__MODULE__, fn(_) -> %{} end)
   end
+
+  @doc """
+  Gets the cache contents.
+  """
+  def get do
+    Agent.get(__MODULE__, fn(m) -> m end)
+  end
 end
