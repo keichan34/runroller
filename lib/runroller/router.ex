@@ -3,6 +3,7 @@ defmodule Runroller.Router do
 
   plug Plug.Logger
   plug Runroller.Plug.AccessControl
+  plug Plug.Head
   plug :match
   plug :dispatch
 
