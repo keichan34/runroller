@@ -6,9 +6,9 @@ defmodule Runroller do
   end
 
   def listen_port do
-    Application.get_env(__MODULE__, :port) || 4000
+    Application.get_env(:runroller, :port) || 4000
   end
 
   def query_adapter,
-    do: Application.get_env(__MODULE__, :query_adapter) || Runroller.Query.HTTPoisonAdapter
+    do: Application.get_env(:runroller, :query_adapter) || Runroller.Query.HTTPoisonAdapter
 end
