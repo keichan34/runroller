@@ -3,3 +3,6 @@
 erl_crash.dump
 *.ez
 /rel
+
+/priv/ssl/*.pem
+/config/prod.secret.exs

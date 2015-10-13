@@ -7,7 +7,7 @@ defmodule Runroller.Supervisor do
 
   def init(_args \\ []) do
     children = [
-      worker(Runroller.App, []),
+      supervisor(Runroller.AppSupervisor, []),
       worker(Runroller.Cache, [])
     ]
 

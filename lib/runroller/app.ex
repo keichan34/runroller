@@ -1,10 +1,14 @@
 defmodule Runroller.App do
-  def start_link do
-    {:ok, pid} = Plug.Adapters.Cowboy.http(
+  def start_link(fun, options \\ []) do
+    options = Dict.merge(
+      [port: Runroller.listen_port],
+      options
+    )
+    {:ok, pid} = apply(Plug.Adapters.Cowboy, fun, [
       Runroller.Router,
       [],
-      port: Runroller.listen_port
-    )
+      options
+    ])
     Process.link(pid)
     {:ok, pid}
   end
