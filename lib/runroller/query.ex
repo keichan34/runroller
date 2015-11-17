@@ -20,7 +20,8 @@ defmodule Runroller.Query do
   end
 
   def lookup(from, uri) do
-    send from, perform_lookup(uri)
+    result = uri |> Runroller.URI.Utils.normalize_uri |> perform_lookup
+    send from, result
   end
 
   defp flush do
