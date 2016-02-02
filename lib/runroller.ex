@@ -19,4 +19,7 @@ defmodule Runroller do
 
   def query_adapter,
     do: Application.get_env(:runroller, :query_adapter) || Runroller.Query.HTTPoisonAdapter
+
+  def timeout,
+    do: Application.get_env(:runroller, :timeout) || 20_000
 end

@@ -20,7 +20,7 @@ defmodule Runroller.Query.TestAdapter do
     do: {:ok, 302, %{"location" => "/200"}}
 
   def head("http://www.example.com/timeout", _) do
-    :timer.sleep(30_000)
+    :timer.sleep(800)
     {:ok, 302, %{"location" => "/200"}}
   end
 

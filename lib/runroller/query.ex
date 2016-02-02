@@ -7,17 +7,16 @@ defmodule Runroller.Query do
   @doc "Performs a GET request and returns the status code and headers."
   defcallback get(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
 
-  @lookup_timeout 20000
-
   def lookup(uri) do
     flush
+    timeout = Runroller.timeout
     {pid, ref} = spawn_monitor(__MODULE__, :lookup, [self, uri])
     receive do
       {:DOWN, ^ref, :process, ^pid, _reason} ->
         {:error, :crash}
       result -> result
     after
-      @lookup_timeout ->
+      timeout ->
         {:error, :timeout}
     end
   end
