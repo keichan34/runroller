@@ -1,5 +1,5 @@
 defmodule RunrollerUnrollTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use Plug.Test
 
   @opts Runroller.Router.init([])
@@ -62,5 +62,14 @@ defmodule RunrollerUnrollTest do
     {status, body} = unroll("http://www.example.com/timeout")
     assert status == 504
     assert body["error_code"] == "timeout"
+  end
+
+  test "a URI that returns 405 Method Not Allowed on a HEAD request" do
+    assert_unrolled unroll("http://www.example.com/405_mna"),
+      "http://www.example.com/405_mna"
+  end
+
+  test "a URI that returns 405 Method Not Allowed on a HEAD request retries as a GET, and redirects if a redirect is encountered." do
+    assert_unrolled unroll("http://www.example.com/405_mna_to_200")
   end
 end

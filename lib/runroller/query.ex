@@ -4,6 +4,9 @@ defmodule Runroller.Query do
   @doc "Performs a HEAD request and returns the status code and headers."
   defcallback head(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
 
+  @doc "Performs a GET request and returns the status code and headers."
+  defcallback get(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
+
   @lookup_timeout 20000
 
   def lookup(uri) do
@@ -42,8 +45,8 @@ defmodule Runroller.Query do
     |> perform_head(redirect_path)
   end
 
-  defp perform_head({:miss, uri}, redirect_path) do
-    case Runroller.query_adapter.head(uri, default_headers) do
+  defp perform_head({:miss, uri}, redirect_path, method \\ :head) do
+    case apply(Runroller.query_adapter, method, [uri, default_headers]) do
       {:ok, code, headers} when code >= 300 and code <= 399 ->
         headers = headers
         |> Map.put_new("location", nil)
@@ -54,6 +57,9 @@ defmodule Runroller.Query do
         Runroller.Cache.store(uri, uri, ttl)
         {:ok, :miss, uri, redirect_path}
 
+      {:ok, 405, _} ->
+        perform_head({:miss, uri}, redirect_path, :get)
+
       {:ok, code, _} when code >= 400 and code <= 599 ->
         {:error, "http_#{code}"}
 
@@ -62,12 +68,14 @@ defmodule Runroller.Query do
     end
   end
   # The last request of the chain should be exactly the same as the request URI.
-  defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path) when uri == cached_uri do
+  defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path, _) when uri == cached_uri do
     {:ok, :hit, cached_uri, redirect_path}
   end
-  defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path) do
+  defp perform_head({:hit, uri, cached_uri, _expires_at}, redirect_path, _) do
     perform_lookup(cached_uri, [uri | redirect_path])
   end
+
+  defp process_server_response()
 
   defp process_redirect(_uri, _code, %{"location" => nil}, _) do
     {:error, :missing_location_header_from_response}

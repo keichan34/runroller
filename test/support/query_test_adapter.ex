@@ -23,4 +23,16 @@ defmodule Runroller.Query.TestAdapter do
     :timer.sleep(30_000)
     {:ok, 302, %{"location" => "/200"}}
   end
+
+  def head("http://www.example.com/405_mna_to_200", _),
+    do: {:ok, 405, %{}}
+
+  def head("http://www.example.com/405_mna", _),
+    do: {:ok, 405, %{}}
+
+  def get("http://www.example.com/405_mna_to_200", _),
+    do: {:ok, 302, %{"location" => "http://www.example.com/200"}}
+
+  def get("http://www.example.com/405_mna", _),
+    do: {:ok, 200, %{}}
 end
