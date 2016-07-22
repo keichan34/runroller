@@ -56,9 +56,9 @@ defmodule Runroller.Mixfile do
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 1.0"},
       {:poison, "~> 1.5"},
-      {:httpoison, "~> 0.7.2"},
-      {:exrm, "~> 0.19.0"},
-      {:timex, "~> 0.19.4"},
+      {:httpoison, "~> 0.9.0"},
+      {:exrm, "~> 1.0.0"},
+      {:timex, "~> 3.0"},
       {:logger_file_backend, "~> 0.0.4"}
     ]
   end

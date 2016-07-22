@@ -1,11 +1,9 @@
 defmodule Runroller.Query do
-  use Behaviour
-
   @doc "Performs a HEAD request and returns the status code and headers."
-  defcallback head(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
+  @callback head(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
 
   @doc "Performs a GET request and returns the status code and headers."
-  defcallback get(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
+  @callback get(uri :: String.t, headers :: Map.t) :: {:ok, integer, Map.t} | {:error, any}
 
   def lookup(uri) do
     flush
@@ -44,7 +42,9 @@ defmodule Runroller.Query do
     |> perform_head(redirect_path)
   end
 
-  defp perform_head({:miss, uri}, redirect_path, method \\ :head) do
+  defp perform_head(hit_or_miss, redirect_path, method \\ :head)
+
+  defp perform_head({:miss, uri}, redirect_path, method) do
     case apply(Runroller.query_adapter, method, [uri, default_headers]) do
       {:ok, code, headers} when code >= 300 and code <= 399 ->
         headers = headers
@@ -74,8 +74,6 @@ defmodule Runroller.Query do
     perform_lookup(cached_uri, [uri | redirect_path])
   end
 
-  defp process_server_response()
-
   defp process_redirect(_uri, _code, %{"location" => nil}, _) do
     {:error, :missing_location_header_from_response}
   end
@@ -93,11 +91,11 @@ defmodule Runroller.Query do
     :infinity
   end
   defp ttl_for_code_and_headers(_, %{"expires" => expires}) do
-    case Timex.DateFormat.parse(expires, "{RFC1123}") do
+    case Timex.parse(expires, "{RFC1123}") do
       {:ok, datetime} ->
         # Convert the difference in to milliseconds, and set a lower limit to the TTL
         max(
-          Timex.Date.diff(datetime, Timex.Date.now, :secs) * 1_000,
+          Timex.diff(datetime, Timex.now, :seconds) * 1_000,
           0
         )
       {:error, _} ->
