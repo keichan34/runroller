@@ -21,4 +21,6 @@ config :logger, :file_log,
   path: "/var/log/runroller/prod.log",
   level: :info
 
-import_config "prod.secret.exs"
+if File.exists?(Path.join(__DIR__, "prod.secret.exs")) do
+  import_config "prod.secret.exs"
+end

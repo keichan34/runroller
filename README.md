@@ -1,13 +1,31 @@
-Runroller
-=========
+# Runroller ![Travis-CI](https://travis-ci.org/keichan34/runroller.svg)
 
-![Travis-CI](https://travis-ci.org/keichan34/runroller.svg)
+# Getting Started
 
-License
-=======
+Runroller defaults to listening to the local TCP port 4000.
+
+## Development
 
 ```
-Copyright (C) 2015  Keitaroh Kobayashi
+$ mix deps.get
+$ iex -S mix
+```
+
+## Quick production start
+
+The default configuration is in `config/config.exs` and `config/[MIX_ENV].exs`.
+The "prod" environment will also import a `config/prod.secret.exs` file if it
+exists, which is in the gitignore.
+
+```
+$ mix deps.get
+$ env MIX_ENV=prod mix do compile, run --no-halt
+```
+
+# License
+
+```
+Copyright (C) 2015-2016  Keitaroh Kobayashi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
